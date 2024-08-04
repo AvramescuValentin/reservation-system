@@ -12,4 +12,10 @@ router.post(
   reservationController.reserveEvent
 );
 
+router.get(
+  "/:dbTitle",
+  reservationValidator,
+  reservationController.getAvailableSlots
+);
+
 module.exports = router;

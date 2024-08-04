@@ -77,6 +77,31 @@ const sendEmail = async (
   }
 };
 
+const getAvailableSlots = async (req, res, next) => {
+  const collectionName = req.params.dbTitle;
+  try {
+    let count = 0;
+    const collections = await mongoose.connection.db
+      .listCollections()
+      .toArray();
+    const collectionExists = collections.some(
+      (collection) =>
+        collection.name.toLowerCase() === collectionName.toLowerCase()
+    );
+
+    if (collectionExists) {
+      count = await mongoose.connection.db
+        .collection(collectionName)
+        .countDocuments();
+    }
+
+    res.status(200).json({ count: count });
+  } catch (err) {
+    const error = new HttpError("S-a atins numarul maxim de rezervari", 400);
+    return next(error);
+  }
+};
+
 const reserveEvent = async (req, res, next) => {
   const errors = validationResult(req);
   console.log(JSON.stringify(errors.errors));
@@ -94,7 +119,7 @@ const reserveEvent = async (req, res, next) => {
       .toArray();
     const collectionExists = collections.some(
       (collection) =>
-        collection.name.toLowerCase() === (collectionName + "s").toLowerCase()
+        collection.name.toLowerCase() === collectionName.toLowerCase()
     );
 
     if (collectionExists) {
@@ -188,3 +213,4 @@ const reserveEvent = async (req, res, next) => {
 };
 
 exports.reserveEvent = reserveEvent;
+exports.getAvailableSlots = getAvailableSlots;
