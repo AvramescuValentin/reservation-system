@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 require("dotenv").config();
+const cors = require("cors");
 
 const reservationsRouter = require("./routes/reservations.router");
 const HttpError = require("./models/http-error");
@@ -9,7 +10,22 @@ const HttpError = require("./models/http-error");
 const port = process.env.PORT;
 const app = express();
 
+app.use(cors());
+
 app.use(bodyParser.json());
+
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, x-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PATCH, PUT, DELETE, OPTIONS"
+  );
+  next();
+});
 
 app.use("/api/reservations", reservationsRouter);
 
