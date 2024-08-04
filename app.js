@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 
 const reservationsRouter = require("./routes/reservations.router");
+const HttpError = require("./models/http-error");
 
 const port = process.env.PORT;
 const app = express();
