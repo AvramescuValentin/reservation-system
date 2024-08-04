@@ -21,12 +21,8 @@ const reservationValidator = [
     .isString()
     .trim()
     .notEmpty()
-    .isLength(10)
     .withMessage("Incorrect phone number"),
-  body("age")
-    .notEmpty()
-    .isNumeric({ min: 5, max: 100 })
-    .withMessage("Incorrect age"),
+  body("age").notEmpty().isNumeric().withMessage("Incorrect age"),
   body("email").trim().notEmpty().isEmail().withMessage("Incorrect email"),
   body("eventType")
     .isString()

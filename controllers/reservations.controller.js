@@ -79,8 +79,9 @@ const sendEmail = async (
 
 const reserveEvent = async (req, res, next) => {
   const errors = validationResult(req);
+  console.log(JSON.stringify(errors.errors));
   if (!errors.isEmpty()) {
-    const error = new HttpError("Datele introduse nu sunt valide", 400);
+    const error = new HttpError(`Datele introduse nu sunt valide`, 400);
     return next(error);
   }
 
