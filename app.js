@@ -5,6 +5,7 @@ require("dotenv").config();
 const cors = require("cors");
 
 const reservationsRouter = require("./routes/reservations.router");
+const usersRouter = require("./routes/users.router");
 const HttpError = require("./models/http-error");
 
 const port = process.env.PORT;
@@ -28,6 +29,8 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/reservations", reservationsRouter);
+
+app.use("/api/users", usersRouter);
 
 app.use((req, res, next) => {
   const error = new HttpError("Could not find this route", 404);

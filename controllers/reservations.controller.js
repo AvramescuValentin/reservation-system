@@ -1,11 +1,11 @@
-const { default: mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 const reservationSchema = require("../models/reservation.model");
 const HttpError = require("../models/http-error");
 const QRCode = require("qrcode");
 const nodemailer = require("nodemailer");
 const path = require("path");
 const fs = require("fs");
-const { query, validationResult } = require("express-validator");
+const { validationResult } = require("express-validator");
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
@@ -27,53 +27,6 @@ const generateQRCode = async (text, outputPath) => {
       500
     );
     return next(error);
-  }
-};
-
-const transporterSyncMail = async (mailOptions) => {
-  return new Promise((resolve, reject) => {
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        reject(error);
-      }
-      console.log(info);
-      resolve();
-    });
-  });
-};
-
-const sendEmail = async (
-  recipientEmail,
-  subject,
-  text,
-  attachmentPath,
-  next
-) => {
-  const mailOptions = {
-    from: process.env.EMAIL,
-    to: recipientEmail,
-    subject: subject,
-    html: `
-        <p>${text}</p>
-        <p><img src="cid:qrcode@nodemailer" alt="QR Code" /></p>
-      `,
-    attachments: [
-      {
-        filename: path.basename(attachmentPath),
-        path: attachmentPath,
-        cid: "qrcode@nodemailer", // Setting a CID for embedding in HTML
-      },
-    ],
-  };
-
-  try {
-    await transporterSyncMail(mailOptions);
-  } catch (err) {
-    const error = new HttpError(
-      "Eroare la generarea codului QR. Rezervarea dumneavoastra a fost salvata. Va rog sa ne contactati pentru a rezolva aceasta problema.",
-      500
-    );
-    throw error;
   }
 };
 
